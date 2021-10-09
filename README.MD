@@ -1,7 +1,7 @@
 RU: Тестовая третья версия. Статистика пользователей AnyConnect + UI с базой на Postgre SQL + Syslog server + Syslog UI
 
 Установка (на докер сервер):<br>
-git clone https://github.com/OlegPowerC/anyconnectusers3.git<br>
+git clone https://github.com/OlegPowerC/anyconnectusersandsyslog.git<br>
 Зайти в папку и запустить файл initdb.sh<br>
 <br>
 cd anyconnectusersandsyslog<br>
