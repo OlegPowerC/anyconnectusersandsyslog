@@ -52,6 +52,7 @@ logging list SSLUSERS2 level informational<br>
 logging list SSLUSERS2 message 605005<br>
 logging list SSLUSERS2 message 611103<br>
 logging list SSLUSERS2 message 113039<br>
+logging list SSLUSERS2 message 113019<br>
 logging list SSLUSERS2 message 722051<br>
 logging trap SSLUSERS2<br>
 logging host inside<br>
@@ -133,6 +134,7 @@ logging list SSLUSERS2 level informational<br>
 logging list SSLUSERS2 message 605005<br>
 logging list SSLUSERS2 message 611103<br>
 logging list SSLUSERS2 message 113039<br>
+logging list SSLUSERS2 message 113019<br>
 logging list SSLUSERS2 message 722051<br>
 logging trap SSLUSERS2<br>
 logging host inside<br>
