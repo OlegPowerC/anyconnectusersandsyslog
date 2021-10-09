@@ -1,106 +1,162 @@
-RU:
-Тестовая версия.
-Статистика пользователей AnyConnect + Syslog коллектор + UI
-с общей базой на Postgre SQL
+RU: Тестовая третья версия. Статистика пользователей AnyConnect + UI с базой на Postgre SQL + Syslog server + Syslog UI
 
-Установка (на докер сервер):
-git clone https://github.com/OlegPowerC/anyconnectusersandsyslog.git
+Установка (на докер сервер):<br>
+git clone https://github.com/OlegPowerC/anyconnectusers3.git<br>
+Зайти в папку и запустить файл initdb.sh<br>
+<br>
+cd anyconnectusersandsyslog<br>
+chmod 777 initdb.sh<br>
+./initdb.sh<br>
+<br>
+Дождаться готовности PSQL сервера<br>
+Не должно быть сообщений об ошибках и вывод должен быть примерно следующий:<br>
+server started<br>
+<br>
+/usr/local/bin/docker-entrypoint.sh: sourcing /docker-entrypoint-initdb.d/1_createdb.sh<br>
+CREATE ROLE<br>
+CREATE DATABASE<br>
+GRANT<br>
+<br>
+/usr/local/bin/docker-entrypoint.sh: sourcing /docker-entrypoint-initdb.d/2_createtabledb.sh<br>
+CREATE TABLE<br>
+CREATE TABLE<br>
+CREATE TABLE<br>
+CREATE TABLE<br>
+CREATE FUNCTION<br>
+CREATE FUNCTION<br>
+CREATE FUNCTION<br>
+CREATE FUNCTION<br>
+CREATE INDEX<br>
+CREATE TRIGGER<br>
+CREATE TRIGGER<br>
+CREATE TRIGGER<br>
+CREATE TRIGGER<br>
+ALTER TABLE<br>
+ALTER TABLE<br>
+...........<br>
+PostgreSQL init process complete; ready for start up.<br>
+...........<br>
+...........<br>
+LOG:  database system is ready to accept connections<br>
+<br>
+После этого остановить запущеный контейнер - ctrl+c<br>
+<br>
+Затем можно запускать все контейнеры: docker-compose up<br>
+<br>
+По умолчанию интерфейс будет доступен по адресу HTTP://<ваш docker сервер>:8182<br>
+SQL порт TCP снаружи 5442 (можно выключить) Порт TCP 7002 слушает Call-Home сообщения от Cisco ASA<br>
+<br>
+Со стороны Cisco ASA:<br>
+<br>
+logging list SSLUSERS2 level informational<br>
+logging list SSLUSERS2 message 605005<br>
+logging list SSLUSERS2 message 611103<br>
+logging list SSLUSERS2 message 113039<br>
+logging list SSLUSERS2 message 722051<br>
+logging trap SSLUSERS2<br>
+logging host inside<br>
+<br>
+event manager applet StartSession<br>
+&nbsp;event syslog id 722051 occurs 1<br>
+&nbsp;action 0 cli command "call-home send alert-group snapshot profile VPNSH"<br>
+&nbsp;output none<br>
+<br>
+event manager applet EndSession<br>
+&nbsp;event syslog id 113019 occurs 1<br>
+&nbsp;action 0 cli command "call-home send alert-group snapshot profile VPNSH"<br>
+&nbsp;output none<br>
+<br>
+service call-home<br>
+&nbsp;call-home alert-group-config snapshot<br>
+&nbsp;&nbsp;add-command "show vpn-sessiondb anyconnect"<br>
+&nbsp;profile VPNSH<br>
+&nbsp;&nbsp;destination transport-method http destination address http http://:7002/vpnsession msg-format xml destination transport-method http subscribe-to-alert-group snapshot periodic interval 1440<br>
+<br>
+Для геолокации по IP адресу используется сервис https://ipstack.com/
+Необходимо получить API ключ и указать его в docker-compose.yml
+параметер GEOLOCATIONAPIKEY:
 
-Зайти в папку и запустить файл initdb.sh
+Добавлен Syslog сервер доступный на порту 8181
 
-cd anyconnectusersandsyslog
-./initdb.sh
+===================================================================================================================
+EN: Betta version 3. AnyConnect users statistics + UI common Postgre SQL database + Syslog server + Syslog UI
 
-Дождаться готовности PSQL сервера и остановить запущеный контейнер - ctrl+c
-
-Затем можно запускать все контейнеры:
-docker-compose up
-
-По умолчанию 
-HTTP://<ваш docker сервер>:8181 SyslogUI
-HTTP://<ваш docker сервер>:8182 AnyConnect Users UI
-Порт UDP 514 слушает Syslog сообщения
-SQL порт TCP снаружи 5442 (можно выключить)
-Порт TCP 7002 слушает Call-Home сообщения от Cisco ASA
-
-Со стороны Cisco ASA:
-
-logging list SSLUSERS2 level informational 
-logging list SSLUSERS2 message 605005 
-logging list SSLUSERS2 message 611103 
-logging list SSLUSERS2 message 113039 
-logging list SSLUSERS2 message 722051 
-logging trap SSLUSERS2 logging host inside
-
-event manager applet StartSession 
-  event syslog id 722051 occurs 1
-  action 0 cli command "call-home send alert-group snapshot profile VPNSH" 
-  output none 
-
-event manager applet EndSession 
-  event syslog id 113019 occurs 1
-  action 0 cli command "call-home send alert-group snapshot profile VPNSH"
-  output none
-
-service call-home 
-call-home 
-  alert-group-config snapshot 
-    add-command "show vpn-sessiondb anyconnect"
-  profile VPNSH
-    destination transport-method http destination address http http://:7002/vpnsession msg-format xml
-    destination transport-method http
-    subscribe-to-alert-group snapshot periodic interval 1440
-
--------------------------------------------------------------------------------
-EN:
-Betta version.
-AnyConnect users statistics + Syslog collector + UI
-common Postgre SQL database
-
-Install (on docker host):
-git clone https://github.com/OlegPowerC/anyconnectusersandsyslog.git
+Install (on docker host): git clone https://github.com/OlegPowerC/anyconnectusersandsyslog.git
 
 Run initdb.sh for create database and tables
 
 cd anyconnectusersandsyslog
+chmod 777 initdb.sh
 ./initdb.sh
 
-Wait for PSQL complete initial work and start, then exit - ctrl+c
+Wait for PSQL complete initial work and start, 
+log must be like:
+server started<br>
+<br>
+/usr/local/bin/docker-entrypoint.sh: sourcing /docker-entrypoint-initdb.d/1_createdb.sh<br>
+CREATE ROLE<br>
+CREATE DATABASE<br>
+GRANT<br>
+<br>
+/usr/local/bin/docker-entrypoint.sh: sourcing /docker-entrypoint-initdb.d/2_createtabledb.sh<br>
+CREATE TABLE<br>
+CREATE TABLE<br>
+CREATE TABLE<br>
+CREATE TABLE<br>
+CREATE FUNCTION<br>
+CREATE FUNCTION<br>
+CREATE FUNCTION<br>
+CREATE FUNCTION<br>
+CREATE INDEX<br>
+CREATE TRIGGER<br>
+CREATE TRIGGER<br>
+CREATE TRIGGER<br>
+CREATE TRIGGER<br>
+ALTER TABLE<br>
+ALTER TABLE<br>
+...........<br>
+PostgreSQL init process complete; ready for start up.<br>
+...........<br>
+...........<br>
+LOG:  database system is ready to accept connections<br>
+<br>
+then exit - ctrl+c
 
-Now You can start all containers:
-docker-compose up
+Now You can start all containers: docker-compose up
 
-By default: 
-HTTP://<docker host IP>:8181 SyslogUI
-HTTP://<docker host IP>:8182 AnyConnect Users UI
-Port UDP 514 accept Syslog message
-SQL server accessible by port TCP 5442 (You can disable it)
-Port TCP 7002 accept Call-Home message from Cisco ASA
+By default: HTTP://<Your docker host ip>:8182 AnyConnect Users UI SQL server accessible by port TCP 5442 (You can disable it) Port TCP 7002 accept Call-Home message from Cisco ASA
 
 On Cisco ASA You must configure next:
 
-logging list SSLUSERS2 level informational 
-logging list SSLUSERS2 message 605005 
-logging list SSLUSERS2 message 611103 
-logging list SSLUSERS2 message 113039 
-logging list SSLUSERS2 message 722051 
-logging trap SSLUSERS2 logging host inside
+<br>
+logging list SSLUSERS2 level informational<br>
+logging list SSLUSERS2 message 605005<br>
+logging list SSLUSERS2 message 611103<br>
+logging list SSLUSERS2 message 113039<br>
+logging list SSLUSERS2 message 722051<br>
+logging trap SSLUSERS2<br>
+logging host inside<br>
+<br>
+event manager applet StartSession<br>
+&nbsp;event syslog id 722051 occurs 1<br>
+&nbsp;action 0 cli command "call-home send alert-group snapshot profile VPNSH"<br>
+&nbsp;output none<br>
+<br>
+event manager applet EndSession<br>
+&nbsp;event syslog id 113019 occurs 1<br>
+&nbsp;action 0 cli command "call-home send alert-group snapshot profile VPNSH"<br>
+&nbsp;output none<br>
+<br>
+service call-home<br>
+&nbsp;call-home alert-group-config snapshot<br>
+&nbsp;&nbsp;add-command "show vpn-sessiondb anyconnect"<br>
+&nbsp;profile VPNSH<br>
+&nbsp;&nbsp;destination transport-method http destination address http http://:7002/vpnsession msg-format xml destination transport-method http subscribe-to-alert-group snapshot periodic interval 1440<br>
+<br>
 
-event manager applet StartSession 
-  event syslog id 722051 occurs 1
-  action 0 cli command "call-home send alert-group snapshot profile VPNSH" 
-  output none 
+Gelolocation data get by https://ipstack.com/
+You must get API key and provide it ib: docker-compose.yml
+parameter - GEOLOCATIONAPIKEY:
 
-event manager applet EndSession 
-  event syslog id 113019 occurs 1
-  action 0 cli command "call-home send alert-group snapshot profile VPNSH"
-  output none
-
-service call-home 
-call-home 
-  alert-group-config snapshot 
-    add-command "show vpn-sessiondb anyconnect"
-  profile VPNSH
-    destination transport-method http destination address http http://:7002/vpnsession msg-format xml
-    destination transport-method http
-    subscribe-to-alert-group snapshot periodic interval 1440
+Now added Syslog server and GUI.
+Accesible on 8181 port

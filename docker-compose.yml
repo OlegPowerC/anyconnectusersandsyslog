@@ -1,10 +1,9 @@
 version: '3.1'
-
 networks:
   netflow_network:
     driver: bridge
 services:
-  db:
+  db3:
     image: postgres
     networks:
       netflow_network:
@@ -17,13 +16,13 @@ services:
       - ./init:/docker-entrypoint-initdb.d
     ports:
       - 5442:5432
-  anyconnectusesapi:
-    image: ciscoliveru/anyconnectusersapi:latest
+  anyconnectusesapi3:
+    image: ciscoliveru/anyconnectapi3:latest
     networks:
       netflow_network:
     restart: always
     environment:
-      PSQLIP: db
+      PSQLIP: db3
       PSQLPORT: 5432
       PSQLUSER: netflow
       PSQLPASSWORD: netflow
@@ -32,51 +31,52 @@ services:
       TABLENAME: anyconnect
     ports:
       - 8182:8181
-  anyconnectuses:
-    image: ciscoliveru/anyconnectusers:latest
+  anyconnectuses3:
+    image: ciscoliveru/anyconnectusers3:latest
     depends_on:
-      - db
+      - db3
     networks:
       netflow_network:
     restart: always
     environment:
-      PSQLIP: db
+      PSQLIP: db3
       PSQLPORT: 5432
       PSQLUSER: netflow
       PSQLPASSWORD: netflow
-      DEBUGMODE: 0
+      DEBUGMODE: 200
       PSQLDBNAME: netflow
       TABLENAME: anyconnect
+      GEOLOCATIONAPIKEY: TestApiKey
     ports:
       - 7002:7002
-  syslogcollectorv2:
-    image: ciscoliveru/syslogcollectorv2:latest
-    depends_on:
-      - db
-    networks:
-      netflow_network:
-    restart: always
-    environment:
-      TZ: Europe/Moscow
-      PSQLIP: db
-      PSQLMODE: 1
-      PSQLPORT: 5432
-      PSQLUSER: netflow
-      PSQLPASSWORD: netflow
-      DEBUGMODE: 0
-      PSQLDBNAME: netflow
-    ports:
-      - 514:514/udp
-  syslogapiv2:
+syslogcollectorv21:
+  image: ciscoliveru/syslogcollectorv2:latest
+  depends_on:
+    - db3
+  networks:
+    netflow_network:
+  restart: always
+  environment:
+    TZ: Europe/Moscow
+    PSQLIP: db3
+    PSQLMODE: 1
+    PSQLPORT: 5432
+    PSQLUSER: netflow
+    PSQLPASSWORD: netflow
+    DEBUGMODE: 0
+    PSQLDBNAME: netflow
+  ports:
+    - 514:514/udp
+  syslogapiv21:
     image: ciscoliveru/syslogapiv2:latest
     depends_on:
-      - db
+      - db3
     networks:
       netflow_network:
     restart: always
     environment:
       TZ: Europe/Moscow
-      PSQLIP: db
+      PSQLIP: db3
       PSQLMODE: 1
       PSQLPORT: 5432
       PSQLUSER: netflow
