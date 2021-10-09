@@ -67,21 +67,21 @@ services:
       PSQLDBNAME: netflow
     ports:
       - 514:514/udp
-    syslogapiv21:
-      image: ciscoliveru/syslogapiv2:latest
-      depends_on:
-        - db3
-      networks:
-        netflow_network:
-      restart: always
-      environment:
-        TZ: Europe/Moscow
-        PSQLIP: db3
-        PSQLMODE: 1
-        PSQLPORT: 5432
-        PSQLUSER: netflow
-        PSQLPASSWORD: netflow
-        DEBUGMODE: 0
-        PSQLDBNAME: netflow
-      ports:
-        - 8181:80
+  syslogapiv21:
+    image: ciscoliveru/syslogapiv2:latest
+    depends_on:
+      - db3
+    networks:
+      netflow_network:
+    restart: always
+    environment:
+      TZ: Europe/Moscow
+      PSQLIP: db3
+      PSQLMODE: 1
+      PSQLPORT: 5432
+      PSQLUSER: netflow
+      PSQLPASSWORD: netflow
+      DEBUGMODE: 0
+      PSQLDBNAME: netflow
+    ports:
+      - 8181:80
