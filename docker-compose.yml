@@ -3,43 +3,48 @@ networks:
   netflow_network:
     driver: bridge
 services:
-  db3:
-    image: postgres
+  db:
+    image: postgres:11.11-alpine
     networks:
       netflow_network:
     restart: always
     environment:
       POSTGRES_PASSWORD: example
       POSTGRES_DB: netflow
+      TZ: Europe/Moscow
+      PGTZ: Europe/Moscow
     volumes:
       - ./data/db:/var/lib/postgresql/data
       - ./init:/docker-entrypoint-initdb.d
     ports:
-      - 5442:5432
-  anyconnectusesapi3:
+      - 5432:5432
+  anyconnectusesapi:
     image: ciscoliveru/anyconnectapi3:latest
     networks:
       netflow_network:
     restart: always
     environment:
-      PSQLIP: db3
+      TZ: Europe/Moscow
+      PSQLIP: db
       PSQLPORT: 5432
       PSQLUSER: netflow
       PSQLPASSWORD: netflow
       DEBUGMODE: 0
       PSQLDBNAME: netflow
       TABLENAME: anyconnect
+      LOCALTIME: 1
     ports:
       - 8182:8181
-  anyconnectuses3:
+  anyconnectuses:
     image: ciscoliveru/anyconnectusers3:latest
     depends_on:
-      - db3
+      - db
     networks:
       netflow_network:
     restart: always
     environment:
-      PSQLIP: db3
+      TZ: Europe/Moscow
+      PSQLIP: db
       PSQLPORT: 5432
       PSQLUSER: netflow
       PSQLPASSWORD: netflow
@@ -47,41 +52,44 @@ services:
       PSQLDBNAME: netflow
       TABLENAME: anyconnect
       GEOLOCATIONAPIKEY: TestApiKey
+      LOCALTIME: 1
     ports:
       - 7002:7002
-  syslogcollectorv21:
+  syslogcollectorv:
     image: ciscoliveru/syslogcollectorv2:latest
     depends_on:
-      - db3
+      - db
     networks:
       netflow_network:
     restart: always
     environment:
       TZ: Europe/Moscow
-      PSQLIP: db3
+      PSQLIP: db
       PSQLMODE: 1
       PSQLPORT: 5432
       PSQLUSER: netflow
       PSQLPASSWORD: netflow
       DEBUGMODE: 0
       PSQLDBNAME: netflow
+      LOCALTIME: 1
     ports:
       - 514:514/udp
-  syslogapiv21:
+  syslogapiv2:
     image: ciscoliveru/syslogapiv2:latest
     depends_on:
-      - db3
+      - db
     networks:
       netflow_network:
     restart: always
     environment:
       TZ: Europe/Moscow
-      PSQLIP: db3
+      PSQLIP: db
       PSQLMODE: 1
       PSQLPORT: 5432
       PSQLUSER: netflow
       PSQLPASSWORD: netflow
       DEBUGMODE: 0
       PSQLDBNAME: netflow
+      LOCALTIME: 1
     ports:
-      - 8181:80
+      - 8181:8181
