@@ -92,4 +92,4 @@ services:
       PSQLDBNAME: netflow
       LOCALTIME: 1
     ports:
-      - 8181:8181
+      - 8081:8081
