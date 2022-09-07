@@ -5,7 +5,7 @@ git clone https://github.com/OlegPowerC/anyconnectusersandsyslog.git<br>
 Зайти в папку и запустить файл initdb.sh<br>
 <br>
 cd anyconnectusersandsyslog<br>
-chmod 777 initdb.sh<br>
+chmod +x initdb.sh<br>
 ./initdb.sh<br>
 <br>
 Дождаться готовности PSQL сервера<br>
@@ -87,7 +87,7 @@ Install (on docker host): git clone https://github.com/OlegPowerC/anyconnectuser
 Run initdb.sh for create database and tables
 
 cd anyconnectusersandsyslog
-chmod 777 initdb.sh
+chmod +x initdb.sh
 ./initdb.sh
 
 Wait for PSQL complete initial work and start, 
