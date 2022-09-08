@@ -77,7 +77,19 @@ service call-home<br>
 Необходимо получить API ключ и указать его в docker-compose.yml
 параметер GEOLOCATIONAPIKEY:
 
-Добавлен Syslog сервер доступный на порту 8181
+Добавлен Syslog сервер доступный на порту 8081
+
+Для Syslog коллектора, добавлена возможность фильтрации сообщений от Cisco ASA, либо конкретными классами (первые 3 цифры в заголовке сообщения типа: %ASA-6-302021 вот 302 и будет класс, 
+либо конкретным сообщением например 302021 а так же диапазонами например 302021-302024, разделять можно запятыми)
+Параметр ASAIGNOREMSG:
+Пример ASAIGNOREMSG: 305,302021-302024
+
+Так же следует во всех контейнерах выставить одно и то же время (часовой пояс):
+TZ: Europe/Moscow
+А для Postgres еще и
+PGTZ: Europe/Moscow
+
+Europe/Moscow для примера.
 
 ===================================================================================================================
 EN: Betta version 3. AnyConnect users statistics + UI common Postgre SQL database + Syslog server + Syslog UI
@@ -161,4 +173,17 @@ You must get API key and provide it ib: docker-compose.yml
 parameter - GEOLOCATIONAPIKEY:
 
 Now added Syslog server and GUI.
-Accesible on 8181 port
+Accesible on 8081 port
+
+You can filter unwanted message from Cisco ASA use parameter:
+ASAIGNOREMSG:
+Provide class of the message, or full message id (first 3 digit in message id is class: %ASA-6-302021 class is 302,
+full message id is 302021, You can provide range of id's like: 302021-302024 and provide many messages and/or clases divided by commas)
+For example ASAIGNOREMSG: 305,302021-302024
+
+You must set timezone for all containers:
+TZ: Europe/Moscow
+For Postgress also set
+PGTZ: Europe/Moscow
+
+Europe/Moscow for example.

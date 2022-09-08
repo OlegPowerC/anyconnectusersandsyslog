@@ -33,6 +33,7 @@ services:
       PSQLDBNAME: netflow
       TABLENAME: anyconnect
       LOCALTIME: 1
+      ASAIGNOREMSG:
     ports:
       - 8182:8181
   anyconnectuses:
