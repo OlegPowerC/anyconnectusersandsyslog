@@ -69,7 +69,7 @@ event manager applet EndSession<br>
 <br>
 service call-home<br>
 call-home<br>
-&nbsp;call-home alert-group-config snapshot<br>
+&nbsp;alert-group-config snapshot<br>
 &nbsp;&nbsp;add-command "show vpn-sessiondb anyconnect"<br>
 &nbsp;profile VPNSH<br>
 &nbsp;&nbsp;destination transport-method http destination address http http://:7002/vpnsession msg-format xml destination transport-method http subscribe-to-alert-group snapshot periodic interval 1440<br>
@@ -164,7 +164,7 @@ event manager applet EndSession<br>
 <br>
 service call-home<br>
 call-home<br>
-&nbsp;call-home alert-group-config snapshot<br>
+&nbsp;alert-group-config snapshot<br>
 &nbsp;&nbsp;add-command "show vpn-sessiondb anyconnect"<br>
 &nbsp;profile VPNSH<br>
 &nbsp;&nbsp;destination transport-method http destination address http http://:7002/vpnsession msg-format xml destination transport-method http subscribe-to-alert-group snapshot periodic interval 1440<br>
