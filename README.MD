@@ -68,6 +68,7 @@ event manager applet EndSession<br>
 &nbsp;output none<br>
 <br>
 service call-home<br>
+call-home<br>
 &nbsp;call-home alert-group-config snapshot<br>
 &nbsp;&nbsp;add-command "show vpn-sessiondb anyconnect"<br>
 &nbsp;profile VPNSH<br>
@@ -162,6 +163,7 @@ event manager applet EndSession<br>
 &nbsp;output none<br>
 <br>
 service call-home<br>
+call-home<br>
 &nbsp;call-home alert-group-config snapshot<br>
 &nbsp;&nbsp;add-command "show vpn-sessiondb anyconnect"<br>
 &nbsp;profile VPNSH<br>
